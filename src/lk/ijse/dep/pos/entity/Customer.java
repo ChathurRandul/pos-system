@@ -1,42 +1,37 @@
 package lk.ijse.dep.pos.entity;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
 public class Customer implements SuperEntity{
 
-    private String customerId;
+    @Id
+    private String id;
     private String name;
     private String address;
-//    private Gender gender;
+    @OneToMany(mappedBy = "customer", cascade = {CascadeType.PERSIST,CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
+    private List<Order> orders = new ArrayList<>();
 
     public Customer() {
     }
 
-    public Customer(String customerId, String name, String address) {
-        this.customerId = customerId;
+    public Customer(String id, String name, String address) {
+        this.id = id;
         this.name = name;
         this.address = address;
     }
 
-//    public Customer(String customerId, String name, String address, Gender gender) {
-//        this.customerId = customerId;
-//        this.name = name;
-//        this.address = address;
-//        this.setGender(gender);
-//    }
-
-    //    public Customer(String customerId, String name, String address) {
-//        this.customerId = customerId;
-//        this.name = name;
-//        this.address = address;
-//    }
-
-
-
-    public String getCustomerId() {
-        return customerId;
+    public String getId() {
+        return id;
     }
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -55,21 +50,29 @@ public class Customer implements SuperEntity{
         this.address = address;
     }
 
-//    public Gender getGender() {
-//        return gender;
-//    }
-//
-//    public void setGender(Gender gender) {
-//        this.gender = gender;
-//    }
+    public List<Order> getOrders() {
+        return orders;
+    }
+
+    public void addOrder(Order order){
+        order.setCustomer(this);
+        this.orders.add(order);
+    }
+
+    public void removeOrder(Order order){
+        if (order.getCustomer() != this){
+            throw new RuntimeException("Invalid order");
+        }
+        order.setCustomer(null);
+        this.orders.remove(order);
+    }
 
     @Override
     public String toString() {
         return "Customer{" +
-                "customerId='" + customerId + '\'' +
+                "id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", address='" + address + '\'' +
-//                ", gender=" + gender +
                 '}';
     }
 }
