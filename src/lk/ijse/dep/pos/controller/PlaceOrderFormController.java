@@ -97,7 +97,7 @@ public class PlaceOrderFormController {
 
             tempItems = itemBO.findAllItems();
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 
@@ -115,7 +115,7 @@ public class PlaceOrderFormController {
                     CustomerDTO customer = customerBO.findCustomer(selectedCustomerID);
                     txtCustomerName.setText(customer.getName());
                 } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                     Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
                 }
             }
@@ -147,7 +147,7 @@ public class PlaceOrderFormController {
                     txtUnitPrice.setText(item.getUnitPrice() + "");
                     txtQtyOnHand.setText(item.getQtyOnHand() + "");
                 } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                     Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
                 }
             }
@@ -171,7 +171,7 @@ public class PlaceOrderFormController {
                             ItemDTO item = itemBO.findItem(selectedOrderDetail.getCode());
                             tempItem.setQtyOnHand(item.getQtyOnHand());
                         } catch (Exception e) {
-                            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
                         }
                     }
@@ -225,7 +225,7 @@ public class PlaceOrderFormController {
                 lblId.setText("OD" + maxOrderId);
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
     }
@@ -357,7 +357,7 @@ public class PlaceOrderFormController {
                 JasperViewer.viewReport(jasperPrint, false);
             });
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 

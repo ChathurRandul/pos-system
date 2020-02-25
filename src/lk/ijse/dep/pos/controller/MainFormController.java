@@ -207,7 +207,7 @@ public class MainFormController implements Initializable {
                 task.setOnFailed(event -> {
                     this.pgb.setVisible(false);
                     this.root.getScene().setCursor(Cursor.DEFAULT);
-                    new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact DEPPO").show();
+                    new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact Developer Team").show();
                 });
 
                 new Thread(task).start();

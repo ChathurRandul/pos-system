@@ -76,7 +76,7 @@ public class ManageCustomerFormController implements Initializable {
                 customers.add(new CustomerTM(c.getId(), c.getName(), c.getAddress()));
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 
@@ -145,7 +145,7 @@ public class ManageCustomerFormController implements Initializable {
                 customers.add(new CustomerTM(newCustomer.getId(), newCustomer.getName(), newCustomer.getAddress()));
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         } else {
@@ -159,7 +159,7 @@ public class ManageCustomerFormController implements Initializable {
                 tblCustomers.refresh();
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         }
@@ -179,7 +179,7 @@ public class ManageCustomerFormController implements Initializable {
             }catch (AlreadyExistsInOrderException e){
                 new Alert(Alert.AlertType.INFORMATION,e.getMessage()).show();
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         }
@@ -220,7 +220,7 @@ public class ManageCustomerFormController implements Initializable {
             txtCustomerId.setText(id);
 
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 

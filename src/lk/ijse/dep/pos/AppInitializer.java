@@ -44,7 +44,7 @@ public class AppInitializer extends Application {
             primaryStage.show();
 
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact Developer Team").show();
             Logger.getLogger("lk.ijse.dep.pos").log(Level.SEVERE, null, e);
         }
     }
