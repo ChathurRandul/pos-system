@@ -71,7 +71,7 @@ public class OrderBOImpl implements OrderBO {
             List<OrderDTO2> dtos = new ArrayList<>();
             for (CustomEntity info : ordersInfo) {
                 dtos.add(new OrderDTO2(info.getOrderId(),
-                        info.getOrderDate(), info.getCustomerId(), info.getCustomerName(), info.getOrderTotal()));
+                        new java.sql.Date(info.getOrderDate().getTime()), info.getCustomerId(), info.getCustomerName(), info.getOrderTotal()));
             }
             return dtos;
         }
