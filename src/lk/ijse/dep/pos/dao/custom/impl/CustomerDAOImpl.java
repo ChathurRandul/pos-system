@@ -11,6 +11,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     private Session session;
 
     @Override
+    public void setSession(Session session){
+        this.session = session;
+    }
+
+    @Override
     public String getLastCustomerId() throws Exception {
         return (String) session.createNativeQuery("SELECT id FROM Customer ORDER BY id DESC LIMIT 1").uniqueResult();
     }

@@ -12,6 +12,11 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     private Session session;
 
     @Override
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    @Override
     public List<OrderDetail> findAll() throws Exception {
         return session.createQuery("FROM OrderDetail", OrderDetail.class).list();
     }
@@ -39,6 +44,6 @@ public class OrderDetailDAOImpl implements OrderDetailDAO {
     @Override
     public boolean existsByItemCode(String itemCode) throws Exception {
         return session.createNativeQuery("SELECT * FROM OrderDetail WHERE itemCode=?1")
-                .setParameter(1,itemCode ).uniqueResult() != null? true: false;
+                .setParameter(1, itemCode).uniqueResult() != null;
     }
 }

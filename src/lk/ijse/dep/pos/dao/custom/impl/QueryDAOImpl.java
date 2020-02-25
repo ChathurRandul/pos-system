@@ -11,6 +11,11 @@ public class QueryDAOImpl implements QueryDAO {
     private Session session;
 
     @Override
+    public void setSession(Session session) {
+        this.session = session;
+    }
+
+    @Override
     public CustomEntity getOrderInfo(int orderId) throws Exception {
         return null;
 /*        ResultSet rst = CrudUtil.execute("SELECT C.customerId, C.name, O.date  FROM Customer C INNER JOIN `Order` O ON C.customerId=O.customerId WHERE O.id=?", orderId);
