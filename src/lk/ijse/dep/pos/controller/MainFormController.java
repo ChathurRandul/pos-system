@@ -1,4 +1,5 @@
 package lk.ijse.dep.pos.controller;
+
 import javafx.animation.FadeTransition;
 import javafx.animation.ScaleTransition;
 import javafx.animation.TranslateTransition;
@@ -21,20 +22,20 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import lk.ijse.dep.pos.db.HibernateUtil;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
-import java.nio.file.Files;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/**
- * FXML Controller class
- *
- * @author ranjith-suranga
- */
+import static lk.ijse.dep.pos.db.HibernateUtil.*;
+import static lk.ijse.dep.pos.db.HibernateUtil.getDatabase;
+
 public class MainFormController implements Initializable {
 
     public ProgressIndicator pgb;
@@ -161,17 +162,6 @@ public class MainFormController implements Initializable {
     public void btnRestore_OnAction(ActionEvent actionEvent) {
 
         try {
-            File propFile = new File("resources/application.properties");
-            FileInputStream fis = new FileInputStream(propFile);
-            Properties properties = new Properties();
-            properties.load(fis);
-            fis.close();
-
-            String password = properties.getProperty("hibernate.connection.password");
-            String username = properties.getProperty("hibernate.connection.username");
-            String host = properties.getProperty("ijse.dep.ip");
-            String port = properties.getProperty("ijse.dep.port");
-            String db = properties.getProperty("ijse.dep.db");
 
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Let's restore the backup");
@@ -181,12 +171,12 @@ public class MainFormController implements Initializable {
             if (file != null) {
 
                 String[] commands;
-                if (password.length() > 0) {
-                    commands = new String[]{"mysql", "-h", host, "-u", username,
-                            "-p" + password, "--port", port, db, "-e", "source " + file.getAbsolutePath()};
+                if (HibernateUtil.getPassword().length() > 0) {
+                    commands = new String[]{"mysql", "-h", getHost(), "-u", getUsername(),
+                            "-p" + getPassword(), "--port", getPort(), getDatabase(), "-e", "source " + file.getAbsolutePath()};
                 } else {
-                    commands = new String[]{"mysql", "-h", host, "-u", username, "--port", port,
-                            db, "-e", "source " + file.getAbsolutePath()};
+                    commands = new String[]{"mysql", "-h", getHost(), "-u", getUsername(), "--port", getPort(),
+                            getDatabase(), "-e", "source " + file.getAbsolutePath()};
                 }
 
                 // Long running task == Restore
@@ -230,17 +220,7 @@ public class MainFormController implements Initializable {
 
     public void btnBackup_OnAction(ActionEvent actionEvent) {
         try {
-            File propFile = new File("resources/application.properties");
-            FileInputStream fis = new FileInputStream(propFile);
-            Properties properties = new Properties();
-            properties.load(fis);
-            fis.close();
 
-            String password = properties.getProperty("hibernate.connection.password");
-            String username = properties.getProperty("hibernate.connection.username");
-            String host = properties.getProperty("ijse.dep.ip");
-            String port = properties.getProperty("ijse.dep.port");
-            String db = properties.getProperty("ijse.dep.db");
             FileChooser fileChooser = new FileChooser();
             fileChooser.setTitle("Save the DB Backup");
             fileChooser.getExtensionFilters().
@@ -258,12 +238,12 @@ public class MainFormController implements Initializable {
                     protected Void call() throws Exception {
 
                         String[] commands;
-                        if (password.length() > 0) {
-                            commands = new String[]{"mysqldump", "-h", host, "-u", username,
-                                    "-p" + password, "--port", port, db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
+                        if (getPassword().length() > 0) {
+                            commands = new String[]{"mysqldump", "-h", getHost(), "-u", getUsername(),
+                                    "-p" + getPassword(), "--port", getPort(), getDatabase(), "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
                         } else {
-                            commands = new String[]{"mysqldump", "-h", host, "-u", username, "--port", port,
-                                    db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
+                            commands = new String[]{"mysqldump", "-h", getHost(), "-u", getUsername(), "--port", getPort(),
+                                    getDatabase(), "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
                         }
 
                         Process process = Runtime.getRuntime().exec(commands);
