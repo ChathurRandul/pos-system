@@ -38,7 +38,6 @@ import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-
 public class ManageItemFormController implements Initializable {
 
     public JFXTextField txtCode;
@@ -78,7 +77,7 @@ public class ManageItemFormController implements Initializable {
                         item.getQtyOnHand(), item.getUnitPrice()));
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 
@@ -136,7 +135,7 @@ public class ManageItemFormController implements Initializable {
                 items.add(newItem);
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         } else {
@@ -152,7 +151,7 @@ public class ManageItemFormController implements Initializable {
                 tblItems.refresh();
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         }
@@ -172,7 +171,7 @@ public class ManageItemFormController implements Initializable {
             }catch (AlreadyExistsInOrderException e){
                 new Alert(Alert.AlertType.INFORMATION,e.getMessage()).show();
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
+                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
                 Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
             }
         }
@@ -212,7 +211,7 @@ public class ManageItemFormController implements Initializable {
             }
             txtCode.setText(code);
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
+            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact DEPPO").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
         }
 

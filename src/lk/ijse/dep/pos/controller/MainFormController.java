@@ -31,7 +31,6 @@ import java.io.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 public class MainFormController implements Initializable {
 
     public ProgressIndicator pgb;
@@ -133,11 +132,9 @@ public class MainFormController implements Initializable {
                 case "imgOrder":
                     root = FXMLLoader.load(this.getClass().getResource("/lk/ijse/dep/pos/view/PlaceOrderForm.fxml"));
                     break;
-                /*case "imgViewOrders":
-                    fxmlLoader = new FXMLLoader(this.getClass().getResource("/lk/ijse/dep/pos/view/SearchOrdersForm.fxml"));
-                    root = fxmlLoader.load();*/
                 case "imgViewOrders":
-                    new Alert(Alert.AlertType.INFORMATION,"Sorry, This section is under construction").show();
+                    fxmlLoader = new FXMLLoader(this.getClass().getResource("/lk/ijse/dep/pos/view/SearchOrdersForm.fxml"));
+                    root = fxmlLoader.load();
                     break;
             }
 
@@ -158,7 +155,7 @@ public class MainFormController implements Initializable {
     }
 
     public void btnRestore_OnAction(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
+        /*FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Let's restore the backup");
         fileChooser.getExtensionFilters().
                 add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
@@ -171,7 +168,7 @@ public class MainFormController implements Initializable {
                         "-p" + DBConnection.password,"--port",DBConnection.port, DBConnection.db, "-e", "source " + file.getAbsolutePath()};
             }else{
                 commands = new String[]{"mysql", "-h", DBConnection.host, "-u", DBConnection.username,"--port",DBConnection.port,
-                        DBConnection.db, "-e", "source " + file.getAbsolutePath()};
+                         DBConnection.db, "-e", "source " + file.getAbsolutePath()};
             }
 
             // Long running task == Restore
@@ -202,16 +199,16 @@ public class MainFormController implements Initializable {
             task.setOnFailed(event -> {
                 this.pgb.setVisible(false);
                 this.root.getScene().setCursor(Cursor.DEFAULT);
-                new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact Developer Team").show();
+                new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact DEPPO").show();
             } );
 
             new Thread(task).start();
-        }
+        }*/
 
     }
 
     public void btnBackup_OnAction(ActionEvent actionEvent) {
-        FileChooser fileChooser = new FileChooser();
+        /*FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save the DB Backup");
         fileChooser.getExtensionFilters().
                 add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
@@ -262,6 +259,6 @@ public class MainFormController implements Initializable {
             });
 
             new Thread(task).start();
-        }
+        }*/
     }
 }
