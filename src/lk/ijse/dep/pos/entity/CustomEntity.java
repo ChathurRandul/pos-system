@@ -1,6 +1,6 @@
 package lk.ijse.dep.pos.entity;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class CustomEntity implements SuperEntity {
 
