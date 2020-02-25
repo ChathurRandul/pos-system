@@ -35,7 +35,7 @@ public class ItemBOImpl implements ItemBO {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             itemDAO.setSession(session);
             session.beginTransaction();
-            itemDAO.save(new Item(item.getCode(),
+            itemDAO.update(new Item(item.getCode(),
                     item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
             session.getTransaction().commit();
         }
