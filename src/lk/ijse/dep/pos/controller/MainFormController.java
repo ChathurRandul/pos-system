@@ -29,8 +29,16 @@ import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
+import java.util.Properties;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * FXML Controller class
+ *
+ * @author ranjith-suranga
+ */
 public class MainFormController implements Initializable {
 
     public ProgressIndicator pgb;
@@ -155,110 +163,142 @@ public class MainFormController implements Initializable {
     }
 
     public void btnRestore_OnAction(ActionEvent actionEvent) {
-        /*FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Let's restore the backup");
-        fileChooser.getExtensionFilters().
-                add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
-        File file = fileChooser.showOpenDialog(this.root.getScene().getWindow());
-        if (file != null) {
 
-            String[] commands;
-            if (DBConnection.password.length() > 0){
-                commands = new String[]{"mysql", "-h", DBConnection.host, "-u", DBConnection.username,
-                        "-p" + DBConnection.password,"--port",DBConnection.port, DBConnection.db, "-e", "source " + file.getAbsolutePath()};
-            }else{
-                commands = new String[]{"mysql", "-h", DBConnection.host, "-u", DBConnection.username,"--port",DBConnection.port,
-                         DBConnection.db, "-e", "source " + file.getAbsolutePath()};
-            }
+        try {
+            File propFile = new File("resources/application.properties");
+            FileInputStream fis = new FileInputStream(propFile);
+            Properties properties = new Properties();
+            properties.load(fis);
+            fis.close();
 
-            // Long running task == Restore
-            this.root.getScene().setCursor(Cursor.WAIT);
-            this.pgb.setVisible(true);
+            String password = properties.getProperty("hibernate.connection.password");
+            String username = properties.getProperty("hibernate.connection.username");
+            String host = properties.getProperty("ijse.dep.ip");
+            String port = properties.getProperty("ijse.dep.port");
+            String db = properties.getProperty("ijse.dep.db");
 
-            Task task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
-                    Process process = Runtime.getRuntime().exec(commands);
-                    int exitCode = process.waitFor();
-                    if (exitCode != 0) {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        br.lines().forEach(System.out::println);
-                        br.close();
-                        throw new RuntimeException("Wadea Kachal");
-                    } else {
-                        return null;
-                    }
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Let's restore the backup");
+            fileChooser.getExtensionFilters().
+                    add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
+            File file = fileChooser.showOpenDialog(this.root.getScene().getWindow());
+            if (file != null) {
+
+                String[] commands;
+                if (password.length() > 0) {
+                    commands = new String[]{"mysql", "-h", host, "-u", username,
+                            "-p" + password, "--port", port, db, "-e", "source " + file.getAbsolutePath()};
+                } else {
+                    commands = new String[]{"mysql", "-h", host, "-u", username, "--port", port,
+                            db, "-e", "source " + file.getAbsolutePath()};
                 }
-            };
 
-            task.setOnSucceeded(event -> {
-                this.pgb.setVisible(false);
-                this.root.getScene().setCursor(Cursor.DEFAULT);
-                new Alert(Alert.AlertType.INFORMATION, "Restore process has been successfully done").show();
-            });
-            task.setOnFailed(event -> {
-                this.pgb.setVisible(false);
-                this.root.getScene().setCursor(Cursor.DEFAULT);
-                new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact DEPPO").show();
-            } );
+                // Long running task == Restore
+                this.root.getScene().setCursor(Cursor.WAIT);
+                this.pgb.setVisible(true);
 
-            new Thread(task).start();
-        }*/
+                Task task = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+                        Process process = Runtime.getRuntime().exec(commands);
+                        int exitCode = process.waitFor();
+                        if (exitCode != 0) {
+                            BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                            br.lines().forEach(System.out::println);
+                            br.close();
+                            throw new RuntimeException("Wadea Kachal");
+                        } else {
+                            return null;
+                        }
+                    }
+                };
+
+                task.setOnSucceeded(event -> {
+                    this.pgb.setVisible(false);
+                    this.root.getScene().setCursor(Cursor.DEFAULT);
+                    new Alert(Alert.AlertType.INFORMATION, "Restore process has been successfully done").show();
+                });
+                task.setOnFailed(event -> {
+                    this.pgb.setVisible(false);
+                    this.root.getScene().setCursor(Cursor.DEFAULT);
+                    new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact DEPPO").show();
+                });
+
+                new Thread(task).start();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger("lk.ijse.dep.pos.controller.MainFormController").log(Level.SEVERE, null, ex);
+        }
 
     }
 
     public void btnBackup_OnAction(ActionEvent actionEvent) {
-        /*FileChooser fileChooser = new FileChooser();
-        fileChooser.setTitle("Save the DB Backup");
-        fileChooser.getExtensionFilters().
-                add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
-        File file = fileChooser.showSaveDialog(this.root.getScene().getWindow());
-        if (file != null) {
+        try {
+            File propFile = new File("resources/application.properties");
+            FileInputStream fis = new FileInputStream(propFile);
+            Properties properties = new Properties();
+            properties.load(fis);
+            fis.close();
 
-            // Now, we have to backup the DB...
-            // Long running task == We have to backup
-            this.root.getScene().setCursor(Cursor.WAIT);
-            this.pgb.setVisible(true);
+            String password = properties.getProperty("hibernate.connection.password");
+            String username = properties.getProperty("hibernate.connection.username");
+            String host = properties.getProperty("ijse.dep.ip");
+            String port = properties.getProperty("ijse.dep.port");
+            String db = properties.getProperty("ijse.dep.db");
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.setTitle("Save the DB Backup");
+            fileChooser.getExtensionFilters().
+                    add(new FileChooser.ExtensionFilter("SQL File", "*.sql"));
+            File file = fileChooser.showSaveDialog(this.root.getScene().getWindow());
+            if (file != null) {
 
-            Task<Void> task = new Task<Void>() {
-                @Override
-                protected Void call() throws Exception {
+                // Now, we have to backup the DB...
+                // Long running task == We have to backup
+                this.root.getScene().setCursor(Cursor.WAIT);
+                this.pgb.setVisible(true);
 
-                    String[] commands;
-                    if (DBConnection.password.length() > 0){
-                        commands = new String[]{"mysqldump", "-h", DBConnection.host, "-u", DBConnection.username,
-                                "-p" + DBConnection.password,"--port",DBConnection.port, DBConnection.db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
-                    }else{
-                        commands = new String[]{"mysqldump", "-h", DBConnection.host, "-u", DBConnection.username, "--port",DBConnection.port,
-                                DBConnection.db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
+                Task<Void> task = new Task<Void>() {
+                    @Override
+                    protected Void call() throws Exception {
+
+                        String[] commands;
+                        if (password.length() > 0) {
+                            commands = new String[]{"mysqldump", "-h", host, "-u", username,
+                                    "-p" + password, "--port", port, db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
+                        } else {
+                            commands = new String[]{"mysqldump", "-h", host, "-u", username, "--port", port,
+                                    db, "--result-file", file.getAbsolutePath() + ((file.getAbsolutePath().endsWith(".sql")) ? "" : ".sql")};
+                        }
+
+                        Process process = Runtime.getRuntime().exec(commands);
+                        int exitCode = process.waitFor();
+                        if (exitCode != 0) {
+                            BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+                            br.lines().forEach(System.out::println);
+                            br.close();
+                            throw new RuntimeException("Wadea Kachal");
+                        } else {
+                            return null;
+                        }
                     }
+                };
 
-                    Process process = Runtime.getRuntime().exec(commands);
-                    int exitCode = process.waitFor();
-                    if (exitCode != 0) {
-                        BufferedReader br = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-                        br.lines().forEach(System.out::println);
-                        br.close();
-                        throw new RuntimeException("Wadea Kachal");
-                    } else {
-                        return null;
-                    }
-                }
-            };
+                task.setOnSucceeded(event -> {
+                    this.pgb.setVisible(false);
+                    this.root.getScene().setCursor(Cursor.DEFAULT);
+                    new Alert(Alert.AlertType.INFORMATION, "Backup process has been done successfully").show();
+                });
 
-            task.setOnSucceeded(event -> {
-                this.pgb.setVisible(false);
-                this.root.getScene().setCursor(Cursor.DEFAULT);
-                new Alert(Alert.AlertType.INFORMATION,"Backup process has been done successfully").show();
-            });
+                task.setOnFailed(event -> {
+                    this.pgb.setVisible(false);
+                    this.root.getScene().setCursor(Cursor.DEFAULT);
+                    new Alert(Alert.AlertType.ERROR, "Failed to back up. Contact DEEPO").show();
+                });
 
-            task.setOnFailed(event -> {
-                this.pgb.setVisible(false);
-                this.root.getScene().setCursor(Cursor.DEFAULT);
-                new Alert(Alert.AlertType.ERROR,"Failed to back up. Contact DEEPO").show();
-            });
-
-            new Thread(task).start();
-        }*/
+                new Thread(task).start();
+            }
+        } catch (Exception ex) {
+            Logger.getLogger("lk.ijse.dep.pos.controller.MainFormController").log(Level.SEVERE, null, ex);
+        }
     }
 }
