@@ -17,16 +17,9 @@ public class QueryDAOImpl implements QueryDAO {
 
     @Override
     public CustomEntity getOrderInfo(int orderId) throws Exception {
-        return null;
-/*        ResultSet rst = CrudUtil.execute("SELECT C.customerId, C.name, O.date  FROM Customer C INNER JOIN `Order` O ON C.customerId=O.customerId WHERE O.id=?", orderId);
-        if (rst.next()){
-            return new CustomEntity(orderId,
-                    rst.getString(1),
-                    rst.getString(2),
-                    rst.getDate(3));
-        }else{
-            return null;
-        }*/
+        return (CustomEntity) session.createQuery("SELECT NEW lk.ijse.dep.pos.entity.CustomEntity(o.id, c.id,c.name,o.date) FROM Customer c INNER JOIN c.orders o WHERE o.id=?1")
+                .setParameter(1, orderId)
+                .uniqueResult();
     }
 
     @Override
