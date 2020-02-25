@@ -17,13 +17,14 @@ public class HibernateUtil {
 
     private static SessionFactory sessionFactory = buildSessionFactory();
 
-    private static SessionFactory buildSessionFactory(){
+    private static SessionFactory buildSessionFactory() {
 
         File propFile = new File("resources/application.properties");
 
         // (1)
         StandardServiceRegistry registry = new StandardServiceRegistryBuilder()
-                .loadProperties(propFile).build();
+                .loadProperties(propFile)
+                .build();
 
         Metadata metadata = new MetadataSources(registry)
                 .addAnnotatedClass(Customer.class)
@@ -39,7 +40,7 @@ public class HibernateUtil {
                 .build();
     }
 
-    public static SessionFactory getSessionFactory(){
+    public static SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
