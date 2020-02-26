@@ -4,16 +4,20 @@ import lk.ijse.dep.pos.dao.CrudDAOImpl;
 import lk.ijse.dep.pos.dao.custom.OrderDAO;
 import lk.ijse.dep.pos.entity.Order;
 
+import javax.persistence.Query;
+
 public class OrderDAOImpl extends CrudDAOImpl<Order, Integer> implements OrderDAO {
 
     @Override
     public int getLastOrderId() throws Exception {
-        return (Integer) entityManager.createNativeQuery("SELECT id FROM `Order` ORDER BY id DESC LIMIT 1").getSingleResult();
+        Query nativeQuery = entityManager.createNativeQuery("SELECT id FROM `Order` ORDER BY id DESC LIMIT 1");
+        return nativeQuery.getResultList().size() > 0? (int) nativeQuery.getSingleResult() : null;
     }
 
     @Override
     public boolean existsByCustomerId(String customerId) throws Exception {
-        return entityManager.createNativeQuery("SELECT * FROM `Order` WHERE customerId=?1")
-                .setParameter(1, customerId).getSingleResult()!=null;
+        Query query = entityManager.createNativeQuery("SELECT * FROM `Order` WHERE customerId=?1")
+                .setParameter(1, customerId);
+        return query.getResultList().size() > 0;
     }
 }

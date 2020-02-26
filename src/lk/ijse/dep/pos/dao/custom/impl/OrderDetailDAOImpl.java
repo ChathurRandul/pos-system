@@ -5,11 +5,14 @@ import lk.ijse.dep.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep.pos.entity.OrderDetail;
 import lk.ijse.dep.pos.entity.OrderDetailPK;
 
+import javax.persistence.Query;
+
 public class OrderDetailDAOImpl extends CrudDAOImpl<OrderDetail, OrderDetailPK> implements OrderDetailDAO {
 
     @Override
     public boolean existsByItemCode(String itemCode) throws Exception {
-        return entityManager.createNativeQuery("SELECT * FROM OrderDetail WHERE item_code=?1")
-                .setParameter(1, itemCode).getSingleResult() != null;
+        Query query = entityManager.createNativeQuery("SELECT * FROM OrderDetail WHERE item_code=?1")
+                .setParameter(1, itemCode);
+        return query.getResultList().size() > 0;
     }
 }
