@@ -18,19 +18,19 @@ public class ItemBOImpl implements ItemBO {
     private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOTypes.ITEM);
 
     @Override
-    public boolean saveItem(ItemDTO item) throws Exception {
+    public void saveItem(ItemDTO item) throws Exception {
         return itemDAO.save(new Item(item.getCode(),
                 item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
     }
 
     @Override
-    public boolean updateItem(ItemDTO item) throws Exception {
+    public void updateItem(ItemDTO item) throws Exception {
         return itemDAO.save(new Item(item.getCode(),
                 item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
     }
 
     @Override
-    public boolean deleteItem(String itemCode) throws Exception {
+    public void deleteItem(String itemCode) throws Exception {
         if (orderDetailDAO.existsByItemCode(itemCode)){
             throw new AlreadyExistsInOrderException("Item already exists in an order, hence unable to delete");
         }

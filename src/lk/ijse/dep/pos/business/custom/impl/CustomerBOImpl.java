@@ -9,6 +9,7 @@ import lk.ijse.dep.pos.dao.custom.OrderDAO;
 import lk.ijse.dep.pos.dto.CustomerDTO;
 import lk.ijse.dep.pos.entity.Customer;
 
+import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,17 +19,18 @@ public class CustomerBOImpl implements CustomerBO {
     private OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOTypes.ORDER);
 
     @Override
-    public boolean saveCustomer(CustomerDTO customer) throws Exception {
-        return customerDAO.save(new Customer(customer.getId(), customer.getName(), customer.getAddress()));
+    public void saveCustomer(CustomerDTO customer) throws Exception {
+        Persistence.createEntityManagerFactory("dep4",);
+        customerDAO.save(new Customer(customer.getId(), customer.getName(), customer.getAddress()));
     }
 
     @Override
-    public boolean updateCustomer(CustomerDTO customer) throws Exception {
+    public void updateCustomer(CustomerDTO customer) throws Exception {
         return customerDAO.update(new Customer(customer.getId(), customer.getName(), customer.getAddress()));
     }
 
     @Override
-    public boolean deleteCustomer(String customerId) throws Exception {
+    public void deleteCustomer(String customerId) throws Exception {
         if (orderDAO.existsByCustomerId(customerId)){
             throw new AlreadyExistsInOrderException("Customer already exists in an order, hence unable to delete");
         }
@@ -40,7 +42,7 @@ public class CustomerBOImpl implements CustomerBO {
         List<Customer> alCustomers = customerDAO.findAll();
         List<CustomerDTO> dtos = new ArrayList<>();
         for (Customer customer : alCustomers) {
-            dtos.add(new CustomerDTO(customer.getCustomerId(), customer.getName(), customer.getAddress()));
+            dtos.add(new CustomerDTO(customer.getId(), customer.getName(), customer.getAddress()));
         }
         return dtos;
     }
@@ -53,7 +55,7 @@ public class CustomerBOImpl implements CustomerBO {
     @Override
     public CustomerDTO findCustomer(String customerId) throws Exception {
         Customer customer = customerDAO.find(customerId);
-        return new CustomerDTO(customer.getCustomerId(),
+        return new CustomerDTO(customer.getId(),
                 customer.getName(), customer.getAddress());
     }
 
@@ -62,7 +64,7 @@ public class CustomerBOImpl implements CustomerBO {
         List<Customer> customers = customerDAO.findAll();
         List<String> ids = new ArrayList<>();
         for (Customer customer : customers) {
-            ids.add(customer.getCustomerId());
+            ids.add(customer.getId());
         }
         return ids;
     }

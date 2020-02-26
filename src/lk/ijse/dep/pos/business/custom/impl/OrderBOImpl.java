@@ -34,7 +34,7 @@ public class OrderBOImpl implements OrderBO {
     }
 
     @Override
-    public boolean placeOrder(OrderDTO order) throws Exception {
+    public void placeOrder(OrderDTO order) throws Exception {
         Connection connection = DBConnection.getInstance().getConnection();
         try {
 
