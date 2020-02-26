@@ -4,5 +4,5 @@ import javax.persistence.EntityManager;
 
 public interface SuperDAO {
 
-    void setEntityManager(EntityManager entityManager);
+    public abstract void setEntityManager(EntityManager entityManager);
 }

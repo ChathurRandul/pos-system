@@ -18,12 +18,14 @@ public abstract class CrudDAOImpl<T extends SuperEntity,ID extends Serializable>
     }
 
     public CrudDAOImpl() {
-        entity = (Class<T>)(((ParameterizedType)(this.getClass().getGenericSuperclass())).getActualTypeArguments()[0]);
+        entity = (Class<T>)(((ParameterizedType)(this.getClass().getGenericSuperclass()))
+                .getActualTypeArguments()[0]);
     }
 
     @Override
     public List<T> findAll() throws Exception {
-        return entityManager.createQuery("SELECT c FROM " + entity.getName() + " c", entity).getResultList();
+        return entityManager.createQuery("SELECT c FROM " + entity.getName() + " c", entity)
+                .getResultList();
     }
 
     @Override
