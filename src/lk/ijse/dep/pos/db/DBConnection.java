@@ -64,7 +64,7 @@ public class DBConnection {
             if (!resultSet.next()) {
                 File dbScriptFile = new File("db-script.sql");
                 if (!dbScriptFile.exists()) {
-                    new Alert(Alert.AlertType.ERROR, "Error, Please Contact Developer Team!").show();
+                    new Alert(Alert.AlertType.ERROR, "DB Script Not Found, Please Contact the Developer Team!").show();
                     throw new RuntimeException("Unable to find the DB Script");
                 }
                 StringBuilder sb = new StringBuilder();
