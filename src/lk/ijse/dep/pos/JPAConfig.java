@@ -31,6 +31,7 @@ public class JPAConfig {
         LocalContainerEntityManagerFactoryBean lcemfb = new LocalContainerEntityManagerFactoryBean();
         lcemfb.setDataSource(ds);
         lcemfb.setJpaVendorAdapter(jpaVendorAdapter);
+        lcemfb.setPackagesToScan("lk.ijse.dep.pos.entity");
         return lcemfb;
     }
 

@@ -26,7 +26,6 @@ import lk.ijse.dep.pos.AppInitializer;
 import lk.ijse.dep.pos.business.custom.CustomerBO;
 import lk.ijse.dep.pos.business.custom.ItemBO;
 import lk.ijse.dep.pos.business.custom.OrderBO;
-import lk.ijse.dep.pos.db.JPAUtil;
 import lk.ijse.dep.pos.dto.CustomerDTO;
 import lk.ijse.dep.pos.dto.ItemDTO;
 import lk.ijse.dep.pos.dto.OrderDTO;
@@ -35,6 +34,7 @@ import lk.ijse.dep.pos.util.OrderDetailTM;
 import org.hibernate.Session;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
@@ -335,7 +335,7 @@ public class PlaceOrderFormController {
         OrderDTO order = new OrderDTO(orderId, null, cmbCustomerId.getSelectionModel().getSelectedItem(), orderDetails);
         try {
             orderBO.placeOrder(order);
-            EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+            EntityManager em = AppInitializer.ctx.getBean(EntityManagerFactory.class).createEntityManager();
             em.unwrap(Session.class).doWork(connection -> {
                 System.out.println(connection);
             });
