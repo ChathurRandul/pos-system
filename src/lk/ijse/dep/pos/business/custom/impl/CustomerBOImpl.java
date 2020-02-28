@@ -8,6 +8,7 @@ import lk.ijse.dep.pos.dto.CustomerDTO;
 import lk.ijse.dep.pos.entity.Customer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ public class CustomerBOImpl implements CustomerBO {
         customerDAO.delete(customerId);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<CustomerDTO> findAllCustomers() throws Exception {
         List<Customer> alCustomers = customerDAO.findAll();
@@ -50,12 +52,14 @@ public class CustomerBOImpl implements CustomerBO {
         return dtos;
     }
 
+    @Transactional(readOnly =  true)
     @Override
     public String getLastCustomerId() throws Exception {
         String lastCustomerId = customerDAO.getLastCustomerId();
         return lastCustomerId;
     }
 
+    @Transactional(readOnly =  true)
     @Override
     public CustomerDTO findCustomer(String customerId) throws Exception {
         Customer customer = customerDAO.find(customerId);
@@ -63,6 +67,7 @@ public class CustomerBOImpl implements CustomerBO {
                 customer.getName(), customer.getAddress());
     }
 
+    @Transactional(readOnly =  true)
     @Override
     public List<String> getAllCustomerIDs() throws Exception {
         List<Customer> customers = customerDAO.findAll();

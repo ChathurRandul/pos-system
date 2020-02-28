@@ -32,6 +32,7 @@ public class OrderBOImpl implements OrderBO {
     @Autowired
     private QueryDAO queryDAO;
 
+    @Transactional(readOnly =  true)
     @Override
     public int getLastOrderId() throws Exception {
         int lastOrderId = orderDAO.getLastOrderId();
@@ -55,6 +56,7 @@ public class OrderBOImpl implements OrderBO {
         }
     }
 
+    @Transactional(readOnly =  true)
     @Override
     public List<OrderDTO2> getOrderInfo(String query) throws Exception {
         List<CustomEntity> ordersInfo = queryDAO.getOrdersInfo(query + "%");
