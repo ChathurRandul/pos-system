@@ -1,18 +1,8 @@
 package lk.ijse.dep.pos.controller;
 
-import lk.ijse.dep.pos.business.BOFactory;
-import lk.ijse.dep.pos.business.BOTypes;
-import lk.ijse.dep.pos.business.custom.CustomerBO;
-import lk.ijse.dep.pos.business.custom.ItemBO;
-import lk.ijse.dep.pos.business.custom.OrderBO;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXComboBox;
 import com.jfoenix.controls.JFXTextField;
-import lk.ijse.dep.pos.db.DBConnection;
-import lk.ijse.dep.pos.dto.CustomerDTO;
-import lk.ijse.dep.pos.dto.ItemDTO;
-import lk.ijse.dep.pos.dto.OrderDTO;
-import lk.ijse.dep.pos.dto.OrderDetailDTO;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -32,21 +22,25 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import net.sf.jasperreports.engine.JasperFillManager;
-import net.sf.jasperreports.engine.JasperPrint;
-import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.view.JasperViewer;
+import lk.ijse.dep.pos.AppInitializer;
+import lk.ijse.dep.pos.business.custom.CustomerBO;
+import lk.ijse.dep.pos.business.custom.ItemBO;
+import lk.ijse.dep.pos.business.custom.OrderBO;
+import lk.ijse.dep.pos.db.JPAUtil;
+import lk.ijse.dep.pos.dto.CustomerDTO;
+import lk.ijse.dep.pos.dto.ItemDTO;
+import lk.ijse.dep.pos.dto.OrderDTO;
+import lk.ijse.dep.pos.dto.OrderDetailDTO;
 import lk.ijse.dep.pos.util.OrderDetailTM;
+import org.hibernate.Session;
 
+import javax.persistence.EntityManager;
 import java.io.IOException;
 import java.net.URL;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -71,9 +65,9 @@ public class PlaceOrderFormController {
 
     private List<ItemDTO> tempItems = new ArrayList<>();
 
-    private CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
-    private ItemBO itemBO = BOFactory.getInstance().getBO(BOTypes.ITEM);
-    private OrderBO orderBO = BOFactory.getInstance().getBO(BOTypes.ORDER);
+    private CustomerBO customerBO = AppInitializer.ctx.getBean(CustomerBO.class);
+    private ItemBO itemBO = AppInitializer.ctx.getBean(ItemBO.class);
+    private OrderBO orderBO = AppInitializer.ctx.getBean(OrderBO.class);
 
     public void initialize() {
 
@@ -95,8 +89,8 @@ public class PlaceOrderFormController {
 
             tempItems = itemBO.findAllItems();
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
         // When customer id is selected
@@ -113,8 +107,8 @@ public class PlaceOrderFormController {
                     CustomerDTO customer = customerBO.findCustomer(selectedCustomerID);
                     txtCustomerName.setText(customer.getName());
                 } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                    Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                    new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                    Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
                 }
             }
         });
@@ -145,8 +139,8 @@ public class PlaceOrderFormController {
                     txtUnitPrice.setText(item.getUnitPrice() + "");
                     txtQtyOnHand.setText(item.getQtyOnHand() + "");
                 } catch (Exception e) {
-                    new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                    Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                    new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                    Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
                 }
             }
         });
@@ -169,8 +163,8 @@ public class PlaceOrderFormController {
                             ItemDTO item = itemBO.findItem(selectedOrderDetail.getCode());
                             tempItem.setQtyOnHand(item.getQtyOnHand());
                         } catch (Exception e) {
-                            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
                         }
                     }
                 }
@@ -223,8 +217,8 @@ public class PlaceOrderFormController {
                 lblId.setText("OD" + maxOrderId);
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
     }
 
@@ -341,15 +335,22 @@ public class PlaceOrderFormController {
         OrderDTO order = new OrderDTO(orderId, null, cmbCustomerId.getSelectionModel().getSelectedItem(), orderDetails);
         try {
             orderBO.placeOrder(order);
-            new Alert(Alert.AlertType.CONFIRMATION, "Order Placed Successfully!", ButtonType.OK).show();
-            /*JasperReport jasperReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/dep/pos/report/order-report.jasper"));
-            Map<String, Object> params = new HashMap<>();
-            params.put("orderId", orderId + "");
-            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, DBConnection.getInstance().getConnection());
-            JasperViewer.viewReport(jasperPrint, false);*/
+            EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
+            em.unwrap(Session.class).doWork(connection -> {
+                System.out.println(connection);
+            });
+            em.close();
+            // If we are going to use OpenJPA or EclipseLink, etc.
+//            Connection connection = em.unwrap(Connection.class);
+
+//            JasperReport jasperReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/dep/pos/report/order-report.jasper"));
+//            Map<String, Object> params = new HashMap<>();
+//            params.put("orderId", orderId + "");
+//            JasperPrint jasperPrint = JasperFillManager.fillReport(jasperReport, params, DBConnection.getInstance().getConnection());
+//            JasperViewer.viewReport(jasperPrint, false);
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
         reset();

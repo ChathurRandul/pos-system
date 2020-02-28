@@ -5,11 +5,6 @@
  */
 package lk.ijse.dep.pos.controller;
 
-import lk.ijse.dep.pos.business.BOFactory;
-import lk.ijse.dep.pos.business.BOTypes;
-import lk.ijse.dep.pos.business.custom.CustomerBO;
-import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
-import lk.ijse.dep.pos.dto.CustomerDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -24,19 +19,22 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lk.ijse.dep.pos.AppInitializer;
+import lk.ijse.dep.pos.business.custom.CustomerBO;
+import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
+import lk.ijse.dep.pos.dto.CustomerDTO;
+import lk.ijse.dep.pos.util.CustomerTM;
 import net.sf.jasperreports.engine.*;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.design.JasperDesign;
 import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
-import lk.ijse.dep.pos.util.CustomerTM;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class ManageCustomerFormController implements Initializable {
 
@@ -56,7 +54,7 @@ public class ManageCustomerFormController implements Initializable {
     @FXML
     private TableView<CustomerTM> tblCustomers;
 
-    private CustomerBO customerBO = BOFactory.getInstance().getBO(BOTypes.CUSTOMER);
+    private CustomerBO customerBO = AppInitializer.ctx.getBean(CustomerBO.class);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -77,8 +75,8 @@ public class ManageCustomerFormController implements Initializable {
                 customers.add(new CustomerTM(c.getId(), c.getName(), c.getAddress()));
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
         tblCustomers.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<CustomerTM>() {
@@ -146,8 +144,8 @@ public class ManageCustomerFormController implements Initializable {
                 customers.add(new CustomerTM(newCustomer.getId(), newCustomer.getName(), newCustomer.getAddress()));
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         } else {
             CustomerTM selectedCustomer = tblCustomers.getSelectionModel().getSelectedItem();
@@ -160,8 +158,8 @@ public class ManageCustomerFormController implements Initializable {
                 tblCustomers.refresh();
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         }
     }
@@ -177,11 +175,11 @@ public class ManageCustomerFormController implements Initializable {
             try {
                 customerBO.deleteCustomer(selectedItem.getId());
                 tblCustomers.getItems().remove(selectedItem);
-            }catch (AlreadyExistsInOrderException e){
-                new Alert(Alert.AlertType.INFORMATION,e.getMessage()).show();
+            } catch (AlreadyExistsInOrderException e) {
+                new Alert(Alert.AlertType.INFORMATION, e.getMessage()).show();
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         }
     }
@@ -221,8 +219,8 @@ public class ManageCustomerFormController implements Initializable {
             txtCustomerId.setText(id);
 
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
     }

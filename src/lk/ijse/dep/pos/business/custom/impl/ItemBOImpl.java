@@ -2,22 +2,25 @@ package lk.ijse.dep.pos.business.custom.impl;
 
 import lk.ijse.dep.pos.business.custom.ItemBO;
 import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
-import lk.ijse.dep.pos.dao.DAOFactory;
-import lk.ijse.dep.pos.dao.DAOTypes;
 import lk.ijse.dep.pos.dao.custom.ItemDAO;
 import lk.ijse.dep.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep.pos.db.JPAUtil;
 import lk.ijse.dep.pos.dto.ItemDTO;
 import lk.ijse.dep.pos.entity.Item;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ItemBOImpl implements ItemBO {
 
-    private OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOTypes.ORDER_DETAIL);
-    private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOTypes.ITEM);
+    @Autowired
+    private OrderDetailDAO orderDetailDAO;
+    @Autowired
+    private ItemDAO itemDAO;
 
     @Override
     public void saveItem(ItemDTO item) throws Exception {
@@ -35,7 +38,7 @@ public class ItemBOImpl implements ItemBO {
         EntityManager em = JPAUtil.getEntityManagerFactory().createEntityManager();
         itemDAO.setEntityManager(em);
         em.getTransaction().begin();
-        itemDAO.save(new Item(item.getCode(),
+        itemDAO.update(new Item(item.getCode(),
                 item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
         em.getTransaction().commit();
         em.close();
@@ -47,7 +50,7 @@ public class ItemBOImpl implements ItemBO {
         itemDAO.setEntityManager(em);
         orderDetailDAO.setEntityManager(em);
         em.getTransaction().begin();
-        if (orderDetailDAO.existsByItemCode(itemCode)){
+        if (orderDetailDAO.existsByItemCode(itemCode)) {
             throw new AlreadyExistsInOrderException("Item already exists in an order, hence unable to delete");
         }
         itemDAO.delete(itemCode);

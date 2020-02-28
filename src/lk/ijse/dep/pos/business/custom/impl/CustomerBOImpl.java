@@ -2,23 +2,25 @@ package lk.ijse.dep.pos.business.custom.impl;
 
 import lk.ijse.dep.pos.business.custom.CustomerBO;
 import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
-import lk.ijse.dep.pos.dao.DAOFactory;
-import lk.ijse.dep.pos.dao.DAOTypes;
 import lk.ijse.dep.pos.dao.custom.CustomerDAO;
 import lk.ijse.dep.pos.dao.custom.OrderDAO;
 import lk.ijse.dep.pos.db.JPAUtil;
 import lk.ijse.dep.pos.dto.CustomerDTO;
 import lk.ijse.dep.pos.entity.Customer;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.EntityManager;
-import javax.persistence.Persistence;
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class CustomerBOImpl implements CustomerBO {
 
-    private CustomerDAO customerDAO = DAOFactory.getInstance().getDAO(DAOTypes.CUSTOMER);
-    private OrderDAO orderDAO = DAOFactory.getInstance().getDAO(DAOTypes.ORDER);
+    @Autowired
+    private CustomerDAO customerDAO;
+    @Autowired
+    private OrderDAO orderDAO;
 
     @Override
     public void saveCustomer(CustomerDTO customer) throws Exception {
@@ -46,7 +48,7 @@ public class CustomerBOImpl implements CustomerBO {
         customerDAO.setEntityManager(em);
         orderDAO.setEntityManager(em);
         em.getTransaction().begin();
-        if (orderDAO.existsByCustomerId(customerId)){
+        if (orderDAO.existsByCustomerId(customerId)) {
             throw new AlreadyExistsInOrderException("Customer already exists in an order, hence unable to delete");
         }
         customerDAO.delete(customerId);

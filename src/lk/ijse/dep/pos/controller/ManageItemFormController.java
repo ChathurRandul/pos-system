@@ -5,12 +5,7 @@
  */
 package lk.ijse.dep.pos.controller;
 
-import lk.ijse.dep.pos.business.BOFactory;
-import lk.ijse.dep.pos.business.BOTypes;
-import lk.ijse.dep.pos.business.custom.ItemBO;
-import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
 import com.jfoenix.controls.JFXTextField;
-import lk.ijse.dep.pos.dto.ItemDTO;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -28,6 +23,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import lk.ijse.dep.pos.AppInitializer;
+import lk.ijse.dep.pos.business.custom.ItemBO;
+import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
+import lk.ijse.dep.pos.dto.ItemDTO;
 import lk.ijse.dep.pos.util.ItemTM;
 
 import java.io.IOException;
@@ -37,7 +36,6 @@ import java.util.Optional;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 
 public class ManageItemFormController implements Initializable {
 
@@ -53,7 +51,7 @@ public class ManageItemFormController implements Initializable {
     @FXML
     private AnchorPane root;
 
-    private ItemBO itemBO = BOFactory.getInstance().getBO(BOTypes.ITEM);
+    private ItemBO itemBO = AppInitializer.ctx.getBean(ItemBO.class);
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -78,8 +76,8 @@ public class ManageItemFormController implements Initializable {
                         item.getQtyOnHand(), item.getUnitPrice()));
             }
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
         tblItems.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<ItemTM>() {
@@ -136,8 +134,8 @@ public class ManageItemFormController implements Initializable {
                 items.add(newItem);
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         } else {
             ItemTM selectedItem = tblItems.getSelectionModel().getSelectedItem();
@@ -145,15 +143,15 @@ public class ManageItemFormController implements Initializable {
                 itemBO.updateItem(new ItemDTO(selectedItem.getCode(),
                         txtDescription.getText(),
                         Integer.parseInt(txtQtyOnHand.getText()),
-                        Double.parseDouble(txtQtyOnHand.getText())));
+                        Double.parseDouble(txtUnitPrice.getText())));
                 selectedItem.setDescription(txtDescription.getText());
                 selectedItem.setQtyOnHand(Integer.parseInt(txtQtyOnHand.getText()));
-                selectedItem.setUnitPrice(Double.parseDouble(txtQtyOnHand.getText()));
+                selectedItem.setUnitPrice(Double.parseDouble(txtUnitPrice.getText()));
                 tblItems.refresh();
                 btnAddNew_OnAction(event);
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         }
     }
@@ -169,11 +167,11 @@ public class ManageItemFormController implements Initializable {
             try {
                 itemBO.deleteItem(selectedItem.getCode());
                 tblItems.getItems().remove(selectedItem);
-            }catch (AlreadyExistsInOrderException e){
-                new Alert(Alert.AlertType.INFORMATION,e.getMessage()).show();
+            } catch (AlreadyExistsInOrderException e) {
+                new Alert(Alert.AlertType.INFORMATION, e.getMessage()).show();
             } catch (Exception e) {
-                new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+                new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+                Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
             }
         }
     }
@@ -212,8 +210,8 @@ public class ManageItemFormController implements Initializable {
             }
             txtCode.setText(code);
         } catch (Exception e) {
-            new Alert(Alert.AlertType.ERROR,"Something went wrong, please contact Developer Team").show();
-            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null,e);
+            new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
+            Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
         }
 
 
