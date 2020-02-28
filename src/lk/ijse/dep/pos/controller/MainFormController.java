@@ -22,7 +22,9 @@ import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Duration;
-import lk.ijse.dep.pos.db.HibernateUtil;
+import lk.ijse.dep.crypto.DEPCrypt;
+import lk.ijse.dep.pos.AppInitializer;
+import org.springframework.core.env.Environment;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -32,9 +34,6 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import static lk.ijse.dep.pos.db.HibernateUtil.*;
-import static lk.ijse.dep.pos.db.HibernateUtil.getDatabase;
 
 public class MainFormController implements Initializable {
 
@@ -53,11 +52,33 @@ public class MainFormController implements Initializable {
     private Label lblMenu;
     @FXML
     private Label lblDescription;
+    private Environment env;
+
+    private String getUsername() {
+        return DEPCrypt.decode(env.getRequiredProperty("hibernate.connection.username"), "dep4");
+    }
+
+    private String getPassword() {
+        return DEPCrypt.decode(env.getRequiredProperty("hibernate.connection.password"), "dep4");
+    }
+
+    private String getHost() {
+        return env.getRequiredProperty("ijse.dep.ip");
+    }
+
+    private String getPort() {
+        return env.getRequiredProperty("ijse.dep.port");
+    }
+
+    private String getDatabase() {
+        return env.getRequiredProperty("ijse.dep.db");
+    }
 
     /**
      * Initializes the lk.ijse.dep.pos.controller class.
      */
     public void initialize(URL url, ResourceBundle rb) {
+        env = AppInitializer.ctx.getBean(Environment.class);
         FadeTransition fadeIn = new FadeTransition(Duration.millis(2000), root);
         fadeIn.setFromValue(0.0);
         fadeIn.setToValue(1.0);
@@ -138,9 +159,8 @@ public class MainFormController implements Initializable {
                     root = FXMLLoader.load(this.getClass().getResource("/lk/ijse/dep/pos/view/PlaceOrderForm.fxml"));
                     break;
                 case "imgViewOrders":
-                    new Alert(Alert.AlertType.INFORMATION,"This Section is Under Construction! :(").show();
-                    /*fxmlLoader = new FXMLLoader(this.getClass().getResource("/lk/ijse/dep/pos/view/SearchOrdersForm.fxml"));
-                    root = fxmlLoader.load();*/
+                    fxmlLoader = new FXMLLoader(this.getClass().getResource("/lk/ijse/dep/pos/view/SearchOrdersForm.fxml"));
+                    root = fxmlLoader.load();
                     break;
             }
 
@@ -172,7 +192,7 @@ public class MainFormController implements Initializable {
             if (file != null) {
 
                 String[] commands;
-                if (HibernateUtil.getPassword().length() > 0) {
+                if (getPassword().length() > 0) {
                     commands = new String[]{"mysql", "-h", getHost(), "-u", getUsername(),
                             "-p" + getPassword(), "--port", getPort(), getDatabase(), "-e", "source " + file.getAbsolutePath()};
                 } else {
@@ -208,7 +228,7 @@ public class MainFormController implements Initializable {
                 task.setOnFailed(event -> {
                     this.pgb.setVisible(false);
                     this.root.getScene().setCursor(Cursor.DEFAULT);
-                    new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact Developer Team").show();
+                    new Alert(Alert.AlertType.ERROR, "Failed to restore the backup. Contact DEPPO").show();
                 });
 
                 new Thread(task).start();

@@ -26,7 +26,6 @@ import lk.ijse.dep.pos.AppInitializer;
 import lk.ijse.dep.pos.business.custom.CustomerBO;
 import lk.ijse.dep.pos.business.custom.ItemBO;
 import lk.ijse.dep.pos.business.custom.OrderBO;
-import lk.ijse.dep.pos.db.HibernateUtil;
 import lk.ijse.dep.pos.dto.CustomerDTO;
 import lk.ijse.dep.pos.dto.ItemDTO;
 import lk.ijse.dep.pos.dto.OrderDTO;
@@ -39,6 +38,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import java.io.IOException;
 import java.net.URL;
@@ -345,16 +345,19 @@ public class PlaceOrderFormController {
             JasperReport jasperReport = (JasperReport) JRLoader.loadObject(this.getClass().getResourceAsStream("/lk/ijse/dep/pos/report/order-report.jasper"));
             Map<String, Object> params = new HashMap<>();
             params.put("orderId", orderId + "");
-            Session session = HibernateUtil.getSessionFactory().openSession();
-            session.doWork(connection -> {
-                JasperPrint jasperPrint = null;
-                try {
-                    jasperPrint = JasperFillManager.fillReport(jasperReport, params, connection);
-                } catch (JRException e) {
-                    e.printStackTrace();
-                }
-                JasperViewer.viewReport(jasperPrint, false);
-            });
+            SessionFactory sf = AppInitializer.ctx.getBean(SessionFactory.class);
+            Session session = sf.openSession();
+            session.doWork(connection -> {});
+//            Session session = HibernateUtil.getSessionFactory().openSession();
+//            session.doWork(connection -> {
+//                JasperPrint jasperPrint = null;
+//                try {
+//                    jasperPrint = JasperFillManager.fillReport(jasperReport, params, connection);
+//                } catch (JRException e) {
+//                    e.printStackTrace();
+//                }
+//                JasperViewer.viewReport(jasperPrint, false);
+//            });
         } catch (Exception e) {
             new Alert(Alert.AlertType.ERROR, "Something went wrong, please contact DEPPO").show();
             Logger.getLogger("lk.ijse.dep.pos.controller").log(Level.SEVERE, null, e);
