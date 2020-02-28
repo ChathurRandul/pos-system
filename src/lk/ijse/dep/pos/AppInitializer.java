@@ -8,6 +8,7 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 import lk.ijse.dep.pos.db.HibernateUtil;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.web.context.support.AnnotationConfigWebApplicationContext;
 
 import java.net.URL;
@@ -22,8 +23,6 @@ public class AppInitializer extends Application {
 
     public static void main(String[] args) {
         launch(args);
-        System.out.println("Shutting down the connection");
-        HibernateUtil.getSessionFactory().close();
     }
 
     @Override

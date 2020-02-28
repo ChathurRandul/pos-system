@@ -3,6 +3,7 @@ package lk.ijse.dep.pos;
 import lk.ijse.dep.crypto.DEPCrypt;
 import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -18,7 +19,7 @@ import java.util.Properties;
 
 @Configuration
 @EnableTransactionManagement
-@PropertySource("file:/home/ranjith-suranga/Documents/dep/Phase 2/layered-pos-hibernate/resources/application.properties")
+@PropertySource("file:${user.dir}/resources/application.properties")
 public class HibernateConfig {
 
     @Autowired
