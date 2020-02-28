@@ -13,19 +13,19 @@ public class Item implements SuperEntity{
     @Id
     private String code;
     private String description;
-    private double unitPrice;
     private int qtyOnHand;
+    private double unitPrice;
     @OneToMany(mappedBy = "item",cascade = {CascadeType.PERSIST,CascadeType.REFRESH, CascadeType.DETACH, CascadeType.MERGE})
     private List<OrderDetail> orderDetails = new ArrayList<>();
 
     public Item() {
     }
 
-    public Item(String code, String description, double unitPrice, int qtyOnHand) {
+    public Item(String code, String description, int qtyOnHand, double unitPrice) {
         this.code = code;
         this.description = description;
-        this.unitPrice = unitPrice;
         this.qtyOnHand = qtyOnHand;
+        this.unitPrice = unitPrice;
     }
 
     public String getCode() {
@@ -69,8 +69,8 @@ public class Item implements SuperEntity{
         return "Item{" +
                 "code='" + code + '\'' +
                 ", description='" + description + '\'' +
-                ", unitPrice=" + unitPrice +
                 ", qtyOnHand=" + qtyOnHand +
+                ", unitPrice=" + unitPrice +
                 '}';
     }
 }

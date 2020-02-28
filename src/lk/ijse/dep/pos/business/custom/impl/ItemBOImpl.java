@@ -2,22 +2,25 @@ package lk.ijse.dep.pos.business.custom.impl;
 
 import lk.ijse.dep.pos.business.custom.ItemBO;
 import lk.ijse.dep.pos.business.exception.AlreadyExistsInOrderException;
-import lk.ijse.dep.pos.dao.DAOFactory;
-import lk.ijse.dep.pos.dao.DAOTypes;
 import lk.ijse.dep.pos.dao.custom.ItemDAO;
 import lk.ijse.dep.pos.dao.custom.OrderDetailDAO;
 import lk.ijse.dep.pos.db.HibernateUtil;
 import lk.ijse.dep.pos.dto.ItemDTO;
 import lk.ijse.dep.pos.entity.Item;
 import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class ItemBOImpl implements ItemBO {
 
-    private OrderDetailDAO orderDetailDAO = DAOFactory.getInstance().getDAO(DAOTypes.ORDER_DETAIL);
-    private ItemDAO itemDAO = DAOFactory.getInstance().getDAO(DAOTypes.ITEM);
+    @Autowired
+    private OrderDetailDAO orderDetailDAO;
+    @Autowired
+    private ItemDAO itemDAO;
 
     @Override
     public void saveItem(ItemDTO item) throws Exception {
@@ -25,7 +28,7 @@ public class ItemBOImpl implements ItemBO {
             itemDAO.setSession(session);
             session.beginTransaction();
             itemDAO.save(new Item(item.getCode(),
-                    item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
+                    item.getDescription(),  item.getQtyOnHand(), item.getUnitPrice()));
             session.getTransaction().commit();
         }
     }
@@ -36,7 +39,7 @@ public class ItemBOImpl implements ItemBO {
             itemDAO.setSession(session);
             session.beginTransaction();
             itemDAO.update(new Item(item.getCode(),
-                    item.getDescription(), item.getUnitPrice(), item.getQtyOnHand()));
+                    item.getDescription(), item.getQtyOnHand(), item.getUnitPrice()));
             session.getTransaction().commit();
         }
     }
