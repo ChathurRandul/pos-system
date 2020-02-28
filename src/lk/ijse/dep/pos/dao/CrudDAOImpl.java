@@ -5,6 +5,8 @@ import lk.ijse.dep.pos.dao.custom.CustomerDAO;
 import lk.ijse.dep.pos.dao.custom.ItemDAO;
 import lk.ijse.dep.pos.entity.SuperEntity;
 import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 import java.lang.reflect.ParameterizedType;
@@ -13,7 +15,8 @@ import java.util.List;
 
 public abstract class CrudDAOImpl<T extends SuperEntity, ID extends Serializable> implements CrudDAO<T, ID> {
 
-    protected Session session;
+    @Autowired
+    protected SessionFactory sessionFactory;
     private Class<T> entity;
 
     public CrudDAOImpl() {
@@ -22,33 +25,33 @@ public abstract class CrudDAOImpl<T extends SuperEntity, ID extends Serializable
     }
 
     @Override
-    public void setSession(Session session) {
-        this.session = session;
+    public Session getSession() {
+        return sessionFactory.getCurrentSession();
     }
 
     @Override
     public void delete(ID id) throws Exception {
-        session.delete(session.load(entity, id));
+        getSession().delete(getSession().load(entity, id));
     }
 
     @Override
     public List<T> findAll() throws Exception {
-        return session.createQuery("FROM " + entity.getName()).list();
+        return getSession().createQuery("FROM " + entity.getName()).list();
     }
 
     @Override
     public T find(ID id) throws Exception {
-        return session.get(entity, id);
+        return getSession().get(entity, id);
     }
 
     @Override
     public void save(T entity) throws Exception {
-        session.save(entity);
+        getSession().save(entity);
     }
 
     @Override
     public void update(T entity) throws Exception {
-        session.merge(entity);
+        getSession().merge(entity);
     }
 
 
